@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StackoverflowApplication.Models
+namespace StackOverFLow.DomainModel
 {
-    public class search_history
+    public class history
     {
         public int sID { get; set; }
         public string searchString { get; set; }
