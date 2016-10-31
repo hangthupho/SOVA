@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DomainModel;
+using StackOverFLow.DomainModel;
 
 namespace DatabaseService
 {
     public interface IDataService
     {
-        IList<post> GetPosts(int page, int pagesize);
-        posts GetPosts(int id);
-        void AddPost(posts post);
-        bool UpdatePost(posts post);
-        bool DeletePost(int id);
+        IList<posts> getPosts(int page, int pagesize);
+        posts getPosts(int id);
+        void addPost(posts post);
+        bool updatePost(posts post);
+        bool deletePost(int id);
         int GetNumberOfPosts();
     }
 }
