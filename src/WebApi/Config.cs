@@ -8,7 +8,7 @@ namespace WebApi
     public class Config
     {
         public const int DefaultPageSize = 10;
-        public const string CategoryRoute = "CategoryRoute";
-        public const string CategoriesRoute = "CategoriesRoute";
+        public const string PostRoute = "PostRoute";
+        public const string PostsRoute = "PostsRoute";
     }
 }

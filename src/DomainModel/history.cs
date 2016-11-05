@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace StackOverFLow.DomainModel
 {
-    public class history
+    public class History
     {
-        public int sID { get; set; }
-        public string searchString { get; set; }
-        public DateTime searchTime { get; set; }
+        [Key]
+        public int sId { get; set; }
+        public string SearchString { get; set; }
+        public DateTime SearchTime { get; set; }
     }
 }

@@ -2,32 +2,44 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DomainModel;
+using StackOverFLow.DomainModel;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using DatabaseService;
 
 namespace WebApi.JsonModels
 {
     public class ModelFactory
     {
-        public static CategoryModel Map(Category category, IUrlHelper url)
+        public static PostModel Map(PostExtended post, IUrlHelper urlHelper)
         {
             // hint: use AutoMapper
-            return new CategoryModel
+            //post = AutoMapper.Mapper.Map<Post, PostModel>(post);
+            //url = url.Link(Config.CategoryRoute, new { id = post.postID });
+
+            return new PostModel
             {
-                Url = url.Link(Config.CategoryRoute, new { id = category.Id}),
-                Name = category.Name,
-                Description = category.Description
+                Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId }),
+                Tiltle = post.Title,
+                Body = post.PostBody,
+                Score = post.Score,
+                CreationDate = post.CreatedDate,
+                UserID = post.UserId,
+                UserName = post.UserName
             };
         }
 
-        public static Category Map(CategoryModel model)
-        {
-            // hint: use AutoMapper
-            return new Category
-            {
-                Name = model.Name,
-                Description = model.Description
-            };
-        }
+        //public static PostExtended Map(PostModel model)
+        //{
+        //    // hint: use AutoMapper
+        //    return new PostExtended
+        //    {
+        //        PostBody = model.Body,
+        //        Score = model.Score,
+        //        CreatedDate = model.CreationDate,
+        //        UserId = model.UserID,
+        //        //UserName = model.UserName
+        //    };
+        //}
     }
 }

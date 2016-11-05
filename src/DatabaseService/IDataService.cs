@@ -8,11 +8,12 @@ namespace DatabaseService
 {
     public interface IDataService
     {
-        IList<posts> getPosts(int page, int pagesize);
-        posts getPosts(int id);
-        void addPost(posts post);
-        bool updatePost(posts post);
-        bool deletePost(int id);
+        IList<PostExtended> GetPost(int page, int pagesize);
+        PostExtended GetPost(int id);
+        //Post GetPost(int id);
+        //void AddPost(Post post);
+        //bool UpdatePost(Post post);
+        //bool DeletePost(int id);
         int GetNumberOfPosts();
     }
 }

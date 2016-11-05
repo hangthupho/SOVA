@@ -33,12 +33,12 @@ namespace WebApi.Controllers
         protected string GetNextUrl(IUrlHelper url, int page, int pagesize, int total)
         {
             if (IsLastPage(page, pagesize, total)) return null;
-            return url.Link(Config.CategoriesRoute, new { page = page + 1, pagesize });
+            return url.Link(Config.PostsRoute, new { page = page + 1, pagesize });
         }
         protected string GetPrevUrl(IUrlHelper url, int page, int pagesize)
         {
             if (IsFirstPage(page)) return null;
-            return url.Link(Config.CategoriesRoute, new { page = page - 1, pagesize });
+            return url.Link(Config.PostsRoute, new { page = page - 1, pagesize });
         }
     }
 }
