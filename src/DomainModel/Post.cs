@@ -20,5 +20,9 @@ namespace StackOverFLow.DomainModel
         public virtual User User { get; set; }
 
         public virtual Question Question { get; set; }
+        public virtual Answer Answer { get; set; }
+        public virtual Comment Comment { get; set; }
+        public virtual Linkpost Linkpost { get; set; }
+        public virtual Tag Tag { get; set; }
     }
 }

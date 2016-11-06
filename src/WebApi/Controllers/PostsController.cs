@@ -15,70 +15,34 @@ namespace WebApi.Controllers
         {
         }
 
-        // GET api/values
+        // GET api/posts
         [HttpGet(Name = Config.PostsRoute)]
 
         public IActionResult Get(int page = 0, int pagesize = Config.DefaultPageSize)
         {
             var data = DataService.GetPost(page, pagesize)
-                .Select(c => ModelFactory.Map(c, Url));
+                .Select(c => ModelFactory.MapPost(c, Url));
             var total = DataService.GetNumberOfPosts();
 
             var result = new
             {
-                total = total,
-                prev = GetPrevUrl(Url, page, pagesize),
-                netx = GetNextUrl(Url, page, pagesize, total),
-                data = data
+                Total = total,
+                Previous = GetPrevUrl(Url, page, pagesize),
+                Next = GetNextUrl(Url, page, pagesize, total),
+                Data = data
             };
 
             return Ok(result);
         }
 
-        // GET api/values/5
+        // GET api/posts/19
         [HttpGet("{id}", Name = Config.PostRoute)]
         public IActionResult Get(int id)
         {
             PostExtended post = DataService.GetPost(id);
             if (post == null) return NotFound();
-            return Ok(ModelFactory.Map(post, Url));
+            return Ok(ModelFactory.MapPost(post, Url));
         }
 
-        //// POST api/values
-        //[HttpPost]
-        //public IActionResult Post([FromBody] PostModel model)
-        //{
-        //    var post = ModelFactory.Map(model);
-        //    DataService.AddPost(post);
-        //    return Ok(ModelFactory.Map(post, Url));
-        //}
-
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public IActionResult Put(int id, [FromBody] PostModel model)
-        //{
-        //    var post = ModelFactory.Map(model);
-        //    post.Id = id;
-        //    if (!DataService.UpdatePost(post))
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok();
-        //}
-
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    if (!DataService.DeletePost(id))
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok();
-        //}
-
-
-        
     }
 }

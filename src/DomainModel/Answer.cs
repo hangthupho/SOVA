@@ -15,5 +15,6 @@ namespace StackOverFLow.DomainModel
         public virtual Post Post { get; set; }
 
         public int ParentId { get; set; }
+
     }
 }

@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 
 namespace WebApi.JsonModels
 {
-    public class PostModel
+    public class CommentModel
     {
         public string Url { get; set; }
-        public string Title { get; set; }
-        public string Body { get; set; }
-        public int Score { get; set; }
+        //public int CommentId { get; set; }
+        public int PostId { get; set; }
+        public int UserId { get; set; }
+        public string CommentBody { get; set; }
         public DateTime CreationDate { get; set; }
-        public int UserID { get; set; }
         public string UserName { get; set; }
-
-        //public virtual CommentModel CommentModel { get; set; }
+        public string PostTitle { get; set; }
     }
 }

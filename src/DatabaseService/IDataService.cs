@@ -8,12 +8,18 @@ namespace DatabaseService
 {
     public interface IDataService
     {
+        //View posts
         IList<PostExtended> GetPost(int page, int pagesize);
         PostExtended GetPost(int id);
-        //Post GetPost(int id);
-        //void AddPost(Post post);
-        //bool UpdatePost(Post post);
-        //bool DeletePost(int id);
         int GetNumberOfPosts();
+
+        //View, add, update, delete comments
+        IList<CommentExtended> GetComment(int page, int pagesize);
+        CommentExtended GetComment(int id);
+        int GetNumberOfComments();
+        CommentExtended AddComment(Comment comment);
+        bool UpdateComment(Comment comment);
+        bool DeleteComment(int id);
+    
     }
 }
