@@ -11,21 +11,29 @@ namespace WebApi.JsonModels
 {
     public class ModelFactory
     {
+        //public static PostModel MapPost(PostExtended post, IUrlHelper urlHelper)
         public static PostModel MapPost(PostExtended post, IUrlHelper urlHelper)
         {
             // hint: use AutoMapper
-            //post = AutoMapper.Mapper.Map<Post, PostModel>(post);
+           Mapper.Initialize(config => config.CreateMap<Post, PostModel>());
 
-            return new PostModel
-            {
-                Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId }),
-                Title = post.Title,
-                Body = post.PostBody,
-                Score = post.Score,
-                CreationDate = post.CreatedDate,
-                UserID = post.UserId,
-                UserName = post.UserName
-            };
+            var model = Mapper.Map<Post, PostModel>(post);
+            model.Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId });
+            model.Title = post.Title;
+            model.UserName = post.UserName;
+
+            return model;
+
+            //return new PostModel
+            //{
+            //    Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId }),               
+            //    Title = post.Title,
+            //    Body = post.PostBody,
+            //    Score = post.Score,
+            //    CreationDate = post.CreatedDate,
+            //    UserID = post.UserId,
+            //    UserName = post.UserName
+            //};
         }
 
 
