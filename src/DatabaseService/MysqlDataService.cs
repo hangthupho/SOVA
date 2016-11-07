@@ -69,8 +69,8 @@ namespace DatabaseService
                            select new CommentExtended
                            {
                                CommentId = c.CommentId,
-                               //PostId = c.PostId,
-                               //UserId = c.UserId,
+                               PostId = c.PostId,
+                               UserId = c.UserId,
                                CommentBody = c.CommentBody,
                                PostTitle = c.Post.Question.Title,
                                CommentCreationDate = c.CommentCreationDate,   

@@ -12,7 +12,7 @@ namespace WebApi.JsonModels
         public int PostId { get; set; }
         public int UserId { get; set; }
         public string CommentBody { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateTime CommentCreationDate { get; set; }
         public string UserName { get; set; }
         public string PostTitle { get; set; }
     }

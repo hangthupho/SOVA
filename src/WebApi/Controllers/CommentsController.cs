@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         public IActionResult Comment([FromBody] CommentModel model)
         {
             var comment = ModelFactory.MapComment(model);
-            return Ok(DataService.AddComment(comment)); //ModelFactory.MapComment(comment, Url)
+            return Ok(DataService.AddComment(comment)); 
         }
 
         // PUT api/comments/5

@@ -9,7 +9,7 @@ namespace WebApi.JsonModels
     {
         public string Url { get; set; }
         public string Title { get; set; }
-        public string Body { get; set; }
+        public string PostBody { get; set; }
         public int Score { get; set; }
         public DateTime CreationDate { get; set; }
         public int UserID { get; set; }

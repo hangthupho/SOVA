@@ -11,55 +11,40 @@ namespace WebApi.JsonModels
 {
     public class ModelFactory
     {
-        //public static PostModel MapPost(PostExtended post, IUrlHelper urlHelper)
         public static PostModel MapPost(PostExtended post, IUrlHelper urlHelper)
         {
-            // hint: use AutoMapper
-           Mapper.Initialize(config => config.CreateMap<Post, PostModel>());
+            // AutoMapper
+            Mapper.Initialize(config => config.CreateMap<Post, PostModel>());
+            var postViewModel = Mapper.Map<Post, PostModel>(post);
 
-            var model = Mapper.Map<Post, PostModel>(post);
-            model.Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId });
-            model.Title = post.Title;
-            model.UserName = post.UserName;
+            // Manually mapping extra properties
+            postViewModel.Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId });
+            postViewModel.Title = post.Title;
+            postViewModel.UserName = post.UserName;
 
-            return model;
-
-            //return new PostModel
-            //{
-            //    Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId }),               
-            //    Title = post.Title,
-            //    Body = post.PostBody,
-            //    Score = post.Score,
-            //    CreationDate = post.CreatedDate,
-            //    UserID = post.UserId,
-            //    UserName = post.UserName
-            //};
+            return postViewModel;
         }
-
 
         public static CommentModel MapComment(CommentExtended comment, IUrlHelper urlHelper)
         {
-             return new CommentModel
-            {
-                Url = urlHelper.Link(Config.CommentRoute, new { id = comment.CommentId }),
-                CommentBody = comment.CommentBody,
-                CreationDate = comment.CommentCreationDate,
-                PostTitle = comment.PostTitle,
-                UserName = comment.UserName
-            };
+            Mapper.Initialize(config => config.CreateMap<Comment, CommentModel>());
+            var commentViewModel = Mapper.Map<Comment, CommentModel>(comment);
+
+            commentViewModel.Url = urlHelper.Link(Config.CommentRoute, new { id = comment.CommentId });
+            commentViewModel.PostTitle = comment.PostTitle;
+            commentViewModel.UserName = comment.UserName;
+
+            return commentViewModel;
         }
 
         public static Comment MapComment(CommentModel model)
         {
-            // hint: use AutoMapper
-            return new Comment
-            {
-                PostId = model.PostId,
-                UserId = model.UserId,
-                CommentBody = model.CommentBody,
-                CommentCreationDate = model.CreationDate,
-                //UserName = model.UserName
-            };
+            Mapper.Initialize(config => config.CreateMap<CommentModel, Comment>());
+            var comment = Mapper.Map<CommentModel, Comment>(model);
+            comment.PostId = model.PostId;
+            comment.UserId = model.UserId;
+
+            return comment;
         }
 
     }
