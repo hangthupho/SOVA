@@ -9,8 +9,10 @@ namespace DatabaseService
     public interface IDataService
     {
         //View posts
-        IList<PostExtended> GetPost(int page, int pagesize);
-        PostExtended GetPost(int id);
+        //IList<PostExtended> GetPost(int page, int pagesize);
+        //PostExtended GetPost(int id);
+        IList<PostExtended> GetListOfPosts(int page, int pagesize);
+        PostExtended GetPostDetail(int id);
         int GetNumberOfPosts();
 
         //View, add, update, delete comments

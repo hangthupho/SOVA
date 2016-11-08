@@ -11,52 +11,105 @@ namespace DatabaseService
     public class MysqlDataService : IDataService
     {
         //======= Get posts =============
-        public IList<PostExtended> GetPost(int page, int pagesize)
-        {
-            using (var db = new SovaContext())
-            {
-                var tmp = (from p in db.post
-                           select new PostExtended
-                           {
-                               PostId = p.PostId,
-                               Title = p.Question.Title,
-                               Score = p.Score,
-                               PostBody = p.PostBody,
-                               CreatedDate = p.CreatedDate,
-                               UserId = p.UserId,
-                               UserName = p.User.UserName
-                           }) .OrderBy(o => o.PostId)
-                              .Skip(page * pagesize)
-                              .Take(pagesize)
-                              .ToList();
-                return tmp;
-            }
-        }
+        //public IList<PostExtended> GetPost(int page, int pagesize)
+        //{
+        //    using (var db = new SovaContext())
+        //    {
+        //        var tmp = (from p in db.post
+        //                   select new PostExtended
+        //                   {
+        //                       PostId = p.PostId,
+        //                       Title = p.Question.Title,
+        //                       Score = p.Score,
+        //                       PostBody = p.PostBody,
+        //                       CreatedDate = p.CreatedDate,
+        //                       UserId = p.UserId,
+        //                       UserName = p.User.UserName
+        //                   }) .OrderBy(o => o.PostId)
+        //                      .Skip(page * pagesize)
+        //                      .Take(pagesize)
+        //                      .ToList();
+        //        return tmp;
+        //    }
+        //}
 
-        public PostExtended GetPost(int id)
-        {
-            using (var db = new SovaContext())
-            {
-                return (from p in db.post
-                        where p.PostId == id
-                           select new PostExtended
-                           {
-                               PostId = p.PostId,
-                               Title = p.Question.Title,
-                               Score = p.Score,
-                               PostBody = p.PostBody,
-                               CreatedDate = p.CreatedDate,
-                               UserId = p.UserId,
-                               UserName = p.User.UserName
-                           }).FirstOrDefault();             
-             }
-        }
+        //public PostExtended GetPost(int id)
+        //{
+        //    using (var db = new SovaContext())
+        //    {
+        //        return (from p in db.post
+        //                where p.PostId == id
+        //                   select new PostExtended
+        //                   {
+        //                       PostId = p.PostId,
+        //                       Title = p.Question.Title,
+        //                       Score = p.Score,
+        //                       PostBody = p.PostBody,
+        //                       CreatedDate = p.CreatedDate,
+        //                       UserId = p.UserId,
+        //                       UserName = p.User.UserName
+        //                   }).FirstOrDefault();             
+        //     }
+        //}
 
         public int GetNumberOfPosts()
         {
             using (var db = new SovaContext())
             {
                 return db.post.Count();
+            }
+        }
+        //======= Get posts as a list =============
+        public IList<PostExtended> GetListOfPosts(int page, int pagesize)
+        {
+            using (var db = new SovaContext())
+            {
+                var list = (from p in db.post
+                            where !db.answer.Any(f => f.PostId == p.PostId) //select those which are post questions, not answers                           
+                           select new PostExtended
+                           {
+                               PostId = p.PostId,
+                               Title = p.Question.Title,                              
+                               UserName = p.User.UserName
+                           }).OrderBy(o => o.PostId)
+                              .Skip(page * pagesize)
+                              .Take(pagesize)
+                              .ToList();
+                return list;
+            }
+        }
+
+        public PostExtended GetPostDetail(int id)
+        {
+            using (var db = new SovaContext())
+            {
+                var getParentId = from a in db.answer
+                        where a.ParentId == id
+                        select a.PostId;
+
+                //select posts.postBody from posts
+                //where postID in (select answers.postID
+                //from answers
+                //where answers.parentID = id);
+                var getAnswerList = (from item in db.post where getParentId.Contains(item.PostId) select item.PostBody).ToList();               
+
+                var result = (from p in db.post
+                              where !db.answer.Any(f => f.PostId == p.PostId)
+                              where p.PostId == id
+                              select new PostExtended
+                              {
+                                  PostId = p.PostId,
+                                  Title = p.Question.Title,
+                                  Score = p.Score,
+                                  PostBody = p.PostBody,
+                                  CreatedDate = p.CreatedDate,
+                                  UserId = p.UserId,
+                                  UserName = p.User.UserName,
+                                  AnswerBody = getAnswerList.ToList()
+                                  //CommentBody = p.Comment.CommentBody.ToString().ToList(),
+                                  //CommentUserName = p.Comment.User.UserName,                         
+                              }).FirstOrDefault();
+                return result;            
             }
         }
 
