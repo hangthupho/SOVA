@@ -9,9 +9,9 @@ using WebApi.JsonModels;
 namespace WebApi.Controllers
 {
     [Route("api/posts")]
-    public class PostsController : BaseController
+    public class PostController : BaseController
     {
-        public PostsController(IDataService dataService) : base(dataService)
+        public PostController(IDataService dataService) : base(dataService)
         {
         }
 
@@ -47,6 +47,7 @@ namespace WebApi.Controllers
             if (post == null) return NotFound();
             return Ok(ModelFactory.MapPostDetail(post, Url));
         }
+        
 
     }
 }

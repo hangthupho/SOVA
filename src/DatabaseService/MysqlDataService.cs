@@ -113,6 +113,21 @@ namespace DatabaseService
             }
         }
 
+        public IList<Tag> GetPostTag(int id)
+        {
+            using (var db = new SovaContext())
+            {
+                var result = (from t in db.tag
+                            where t.PostId == id
+                            select new Tag
+                            {
+                                PostId = t.PostId,
+                                TagName = t.TagName
+                            }).ToList();
+                return result;                       
+            }
+        }
+
         //======= CRUD on Comment Table =============
         public IList<CommentExtended> GetComment(int page, int pagesize)
         {

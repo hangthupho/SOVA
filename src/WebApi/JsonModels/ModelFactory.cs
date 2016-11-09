@@ -29,6 +29,14 @@ namespace WebApi.JsonModels
         //        UserName = post.UserName
         //    };
         //}
+        public static TagModel MapTag(Tag tag, IUrlHelper urlHelper)
+        {
+            return new TagModel
+            {
+                Url = urlHelper.Link(Config.TagsRoute, new { id = tag.PostId }),
+                TagName = tag.TagName
+            };
+        }
 
         public static PostListModel MapPostList(PostExtended post, IUrlHelper urlHelper)
         {        

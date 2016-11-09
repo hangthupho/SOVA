@@ -32,6 +32,10 @@ namespace DatabaseService
             modelBuilder.Entity<Marking>().ToTable("marks");
             modelBuilder.Entity<History>().ToTable("search_history");
 
+            modelBuilder.Entity<Tag>().ToTable("tags");
+            modelBuilder.Entity<Tag>().Property(t => t.TagName).HasColumnName("tag");
+            modelBuilder.Entity<Tag>().HasKey(t => new { t.PostId, t.TagName });
+
             base.OnModelCreating(modelBuilder);
         }
 

@@ -14,6 +14,7 @@ namespace StackOverFLow.DomainModel
         public int PostId { get; set; }
         public virtual Post Post { get; set; }
 
+        [Key]
         public string TagName { get; set; }
     }
 }
