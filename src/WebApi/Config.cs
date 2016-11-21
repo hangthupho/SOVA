@@ -13,5 +13,11 @@ namespace WebApi
         public const string CommentRoute = "CommentRoute";
         public const string CommentsRoute = "CommentsRoute";
         public const string TagsRoute = "TagsRoute";
+        public const string AnnotationsRoute = "AnnotationsRoute";
+        public const string AnnotationRoute = "AnnotationRoute";
+        public const string UserRoute = "UserRoute";
+        public const string UsersRoute = "UsersRoute";
+        public const string HistoryRoute = "HistoryRoute";
+        public const string HistoriesRoute = "HistoriesRoute";
     }
 }

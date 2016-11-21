@@ -20,17 +20,17 @@ namespace WebApi.Controllers
 
         public IActionResult Get(int page = 0, int pagesize = Config.DefaultPageSize)
         {
-            //var data = DataService.GetPost(page, pagesize)
-            //    .Select(c => ModelFactory.MapPost(c, Url));
+            var total = DataService.GetNumberOfPosts();
+
             var data = DataService.GetListOfPosts(page, pagesize)
                 .Select(c => ModelFactory.MapPostList(c, Url));
-            var total = DataService.GetNumberOfPosts();
+            
 
             var result = new
             {
                 Total = total,
-                Previous = GetPrevUrl(Url, page, pagesize),
-                Next = GetNextUrl(Url, page, pagesize, total),
+                Previous = PrevUrl(Url, Config.PostsRoute, page, pagesize), 
+                Next = NextUrl(Url, Config.PostsRoute, page, pagesize, total), 
                 Data = data
             };
 
@@ -41,9 +41,8 @@ namespace WebApi.Controllers
         [HttpGet("{id}", Name = Config.PostRoute)]
         public IActionResult Get(int id)
         {
-            //PostExtended post = DataService.GetPost(id);
+
             PostExtended post = DataService.GetPostDetail(id);
-            var dd = ModelFactory.MapPostDetail(post, Url);
             if (post == null) return NotFound();
             return Ok(ModelFactory.MapPostDetail(post, Url));
         }

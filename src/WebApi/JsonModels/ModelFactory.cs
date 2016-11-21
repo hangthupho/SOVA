@@ -1,86 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using StackOverFLow.DomainModel;
+﻿using StackOverFLow.DomainModel;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
 using DatabaseService;
+using DomainModel;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace WebApi.JsonModels
 {
     public class ModelFactory
     {
-        //public static PostModel MapPost(PostExtended post, IUrlHelper urlHelper)
-        //{
-        // AutoMapper
-        //Mapper.Initialize(config => config.CreateMap<Post, PostModel>());
-        //var postViewModel = Mapper.Map<Post, PostModel>(post);
-
-        // Manually mapping extra properties
-        //postViewModel.Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId });
-        //postViewModel.Title = post.Title;
-        //postViewModel.UserName = post.UserName;
-        //return postViewModel;
-        //    return new PostModel
-        //    {
-        //        Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId }),
-        //        Title = post.Title,
-        //        UserName = post.UserName
-        //    };
-        //}
+        //============= Mapping Tags ==============
         public static TagModel MapTag(Tag tag, IUrlHelper urlHelper)
         {
-            return new TagModel
-            {
-                Url = urlHelper.Link(Config.TagsRoute, new { id = tag.PostId }),
-                TagName = tag.TagName
-            };
+            var tagViewModel = MappingConfig<Tag, TagModel>.Convert(tag);
+            tagViewModel.Url = urlHelper.Link(Config.TagsRoute, new { id = tag.PostId });
+            return tagViewModel;
         }
 
+        //============= Mapping Question Posts as a List ==============
         public static PostListModel MapPostList(PostExtended post, IUrlHelper urlHelper)
-        {        
-            return new PostListModel
-            {
-                Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId }),
-                Title = post.Title,
-                UserName = post.UserName
-            };
+        {
+            var postListViewModel = MappingConfig<PostExtended, PostListModel>.Convert(post);
+            postListViewModel.Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId });
+            return postListViewModel;
         }
-        public static PostDetailModel MapPostDetail(PostExtended post, IUrlHelper urlHelper)
-        {            
-            Mapper.Initialize(config => config.CreateMap<Post, PostDetailModel>());
-            var postViewModel = Mapper.Map<Post, PostDetailModel>(post);
 
+        //============= Mapping Post Details ==============
+        public static PostDetailModel MapPostDetail(PostExtended post, IUrlHelper urlHelper)
+        {
+
+            var postViewModel = MappingConfig<PostExtended, PostDetailModel>.Convert(post);
             postViewModel.Url = urlHelper.Link(Config.PostRoute, new { id = post.PostId });
-            postViewModel.Title = post.Title;
-            postViewModel.UserName = post.UserName;
-            postViewModel.Answers = post.AnswerBody;
             return postViewModel;
         }
 
         //=============== Mapping Comments ================
         public static CommentModel MapComment(CommentExtended comment, IUrlHelper urlHelper)
         {
-            Mapper.Initialize(config => config.CreateMap<Comment, CommentModel>());
-            var commentViewModel = Mapper.Map<Comment, CommentModel>(comment);
-
+            var commentViewModel = MappingConfig<CommentExtended, CommentModel>.Convert(comment);
             commentViewModel.Url = urlHelper.Link(Config.CommentRoute, new { id = comment.CommentId });
-            commentViewModel.PostTitle = comment.PostTitle;
-            commentViewModel.UserName = comment.UserName;
-
             return commentViewModel;
         }
 
-        public static Comment MapComment(CommentModel model)
+        //=============== Mapping Annotations ================
+        public static AnnotationModel MapAnnotation (Annotation annotation, IUrlHelper urlHelper)
         {
-            Mapper.Initialize(config => config.CreateMap<CommentModel, Comment>());
-            var comment = Mapper.Map<CommentModel, Comment>(model);
-            comment.PostId = model.PostId;
-            comment.UserId = model.UserId;
-
-            return comment;
+            var annotationViewModel = MappingConfig<Annotation, AnnotationModel>.Convert(annotation);
+            annotationViewModel.Url = urlHelper.Link(Config.AnnotationRoute, new { id = annotation.AnnotationId });
+            return annotationViewModel;
         }
+        public static Annotation MapAnnotation(AnnotationModel model)
+        {
+            return MappingConfig<AnnotationModel, Annotation>.Convert(model);
+        }
+
+        //============= Mapping Users ==============
+        public static UserModel MapUser(User user, IUrlHelper urlHelper)
+        {
+            var userViewModel = MappingConfig<User, UserModel>.Convert(user);
+            userViewModel.Url = urlHelper.Link(Config.UserRoute, new { id = user.UserId });
+            return userViewModel;
+        }
+        //============= Mapping History ==============
+        public static HistoryModel MapHistory(History history, IUrlHelper urlHelper)
+        {
+            var historyViewModel = MappingConfig<History, HistoryModel>.Convert(history);
+            historyViewModel.Url = urlHelper.Link(Config.HistoryRoute, new { id = history.sId });
+            return historyViewModel;
+        }
+
+
 
     }
 }

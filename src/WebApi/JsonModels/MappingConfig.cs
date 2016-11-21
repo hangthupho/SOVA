@@ -1,4 +1,5 @@
-﻿using DatabaseService;
+﻿using AutoMapper;
+using DatabaseService;
 using StackOverFLow.DomainModel;
 using System;
 using System.Collections.Generic;
@@ -7,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace WebApi.JsonModels
 {
-    public static class MappingConfig
+    public static class MappingConfig<src,dest>
     {
-        public static void RegisterMap()
+        public static dest Convert(src model)
         {
-            AutoMapper.Mapper.Initialize(config =>
-            {
-                config.CreateMap<PostExtended, PostModel>();
-            });
+            Mapper.Initialize(config => config.CreateMap<src, dest>().ReverseMap());
+
+            return Mapper.Map<dest>(model);
         }
     }
 }

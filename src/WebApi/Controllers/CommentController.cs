@@ -28,8 +28,8 @@ namespace WebApi.Controllers
             var result = new
             {
                 Total = total,
-                Previous = GetPrevCommentUrl(Url, page, pagesize),
-                Next = GetNextCommentUrl(Url, page, pagesize, total),
+                Previous = PrevUrl(Url, Config.CommentsRoute, page, pagesize),
+                Next = NextUrl(Url, Config.CommentsRoute, page, pagesize, total),
                 Data = data
             };
 
@@ -44,41 +44,6 @@ namespace WebApi.Controllers
             if (comment == null) return NotFound();
             return Ok(ModelFactory.MapComment(comment, Url));
         }
-
-        // POST api/comments
-        [HttpPost]
-        public IActionResult Comment([FromBody] CommentModel model)
-        {
-            var comment = ModelFactory.MapComment(model);
-            return Ok(DataService.AddComment(comment)); 
-        }
-
-        // PUT api/comments/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] CommentModel model)
-        {
-            var comment = ModelFactory.MapComment(model);
-            comment.CommentId = id;
-            if (!DataService.UpdateComment(comment))
-            {
-                return NotFound();
-            }
-            return Ok();
-        }
-
-        // DELETE api/comments/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            if (!DataService.DeleteComment(id))
-            {
-                return NotFound();
-            }
-
-            return Ok();
-        }
-
-
 
     }
    

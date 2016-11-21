@@ -12,10 +12,9 @@ namespace WebApi.JsonModels
         public string Title { get; set; }
         public string PostBody { get; set; }
         public int Score { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public string UserName { get; set; }
 
-        public List<string> Answers { get; set; }
-        //public List<int> AnswerId { get; set; }
+        public IList<string> Answers { get; set; }
     }
 }

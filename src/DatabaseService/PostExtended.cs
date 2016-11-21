@@ -8,15 +8,8 @@ namespace DatabaseService
 {
     public class PostExtended : Post
     {
-        public string Title { get; internal set; }
-        public string UserName { get; internal set; }
-
-        //public List<int> AnswerId { get; internal set; }
-        public List<string> AnswerBody { get; internal set; }
-        //public List<Post> AnswerBody { get; internal set; }
-        //public List<string> AnswerUserName { get; internal set; }
-
-        //public List<string> CommentBody { get; internal set; }
-        //public List<string> CommentUserName { get; internal set; }
+        public string Title { get;  set; }
+        public string UserName { get;  set; }
+        public IList<string> Answers { get; set; }
     }
 }

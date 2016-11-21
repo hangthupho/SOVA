@@ -14,7 +14,5 @@ namespace WebApi.JsonModels
         public DateTime CreationDate { get; set; }
         public int UserID { get; set; }
         public string UserName { get; set; }
-
-        //public virtual CommentModel CommentModel { get; set; }
     }
 }

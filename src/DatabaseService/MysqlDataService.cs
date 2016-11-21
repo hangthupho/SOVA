@@ -1,56 +1,17 @@
-﻿using System;
+﻿   using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using StackOverFLow.DomainModel;
 using Microsoft.EntityFrameworkCore;
+using DomainModel;
 
 namespace DatabaseService
 {
     public class MysqlDataService : IDataService
     {
-        //======= Get posts =============
-        //public IList<PostExtended> GetPost(int page, int pagesize)
-        //{
-        //    using (var db = new SovaContext())
-        //    {
-        //        var tmp = (from p in db.post
-        //                   select new PostExtended
-        //                   {
-        //                       PostId = p.PostId,
-        //                       Title = p.Question.Title,
-        //                       Score = p.Score,
-        //                       PostBody = p.PostBody,
-        //                       CreatedDate = p.CreatedDate,
-        //                       UserId = p.UserId,
-        //                       UserName = p.User.UserName
-        //                   }) .OrderBy(o => o.PostId)
-        //                      .Skip(page * pagesize)
-        //                      .Take(pagesize)
-        //                      .ToList();
-        //        return tmp;
-        //    }
-        //}
 
-        //public PostExtended GetPost(int id)
-        //{
-        //    using (var db = new SovaContext())
-        //    {
-        //        return (from p in db.post
-        //                where p.PostId == id
-        //                   select new PostExtended
-        //                   {
-        //                       PostId = p.PostId,
-        //                       Title = p.Question.Title,
-        //                       Score = p.Score,
-        //                       PostBody = p.PostBody,
-        //                       CreatedDate = p.CreatedDate,
-        //                       UserId = p.UserId,
-        //                       UserName = p.User.UserName
-        //                   }).FirstOrDefault();             
-        //     }
-        //}
 
         public int GetNumberOfPosts()
         {
@@ -59,8 +20,84 @@ namespace DatabaseService
                 return db.post.Count();
             }
         }
-        //======= Get posts as a list =============
-        public IList<PostExtended> GetListOfPosts(int page, int pagesize)
+
+        //======= CRUD on annotations =============
+        public IList<Annotation> GetAnnotation(int page, int pagesize)
+        {
+            using (var db = new SovaContext())
+            {
+                var tmp = (from a in db.annotation
+                           select a)
+                           .OrderBy(o => o.AnnotationId)
+                           .Skip(page * pagesize)
+                           .Take(pagesize)
+                           .ToList();
+                return tmp;
+            }
+        }
+
+        public Annotation GetAnnotation(int id)
+        {
+            using (var db = new SovaContext())
+            {
+                var result = (from p in db.annotation
+                              where p.AnnotationId == id
+                              select p).FirstOrDefault();
+                return result;
+            }
+        }
+
+        public Annotation AddAnnotation(Annotation annotation)
+        {
+            using (var db = new SovaContext())
+            {
+                //annotation.AnnotationId = db.annotation.Max(c => c.AnnotationId) + 1;
+                db.Add(annotation);
+                db.SaveChanges();
+            }
+            return GetAnnotation(annotation.AnnotationId);
+        }
+
+        public bool UpdateAnnotation(Annotation annotation)
+        { 
+            using (var db = new SovaContext())
+
+                try
+                {
+                    db.Attach(annotation);
+                    db.Entry(annotation).State = EntityState.Modified;
+                    return db.SaveChanges() > 0;
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return false;
+                }
+
+        }
+
+        public bool DeleteAnnotation(int id)
+        {
+            using (var db = new SovaContext())
+            {
+                var annotation = db.annotation.FirstOrDefault(c => c.AnnotationId == id);
+                if (annotation == null)
+                {
+                    return false;
+                }
+                db.Remove(annotation);
+                return db.SaveChanges() > 0;
+            }
+        }
+
+        public int GetNumberOfAnnotations()
+        {
+            using (var db = new SovaContext())
+            {
+                return db.annotation.Count();
+            }
+        }
+        //======= Get question posts as a list =============
+        public List<PostExtended> GetListOfPosts(int page, int pagesize)
         {
             using (var db = new SovaContext())
             {
@@ -69,9 +106,9 @@ namespace DatabaseService
                            select new PostExtended
                            {
                                PostId = p.PostId,
-                               Title = p.Question.Title,                              
+                               Title = p.Question.Title,
                                UserName = p.User.UserName
-                           }).OrderBy(o => o.PostId)
+                           }) .OrderBy(o => o.PostId)
                               .Skip(page * pagesize)
                               .Take(pagesize)
                               .ToList();
@@ -91,7 +128,7 @@ namespace DatabaseService
                 //where postID in (select answers.postID
                 //from answers
                 //where answers.parentID = id);
-                var getAnswerList = (from item in db.post where getParentId.Contains(item.PostId) select item.PostBody).ToList();               
+                var getAnswerList = (from item in db.post where getParentId.Contains(item.PostId) select item.PostBody).ToList();
 
                 var result = (from p in db.post
                               where !db.answer.Any(f => f.PostId == p.PostId)
@@ -103,16 +140,13 @@ namespace DatabaseService
                                   Score = p.Score,
                                   PostBody = p.PostBody,
                                   CreatedDate = p.CreatedDate,
-                                  UserId = p.UserId,
                                   UserName = p.User.UserName,
-                                  AnswerBody = getAnswerList.ToList()
-                                  //CommentBody = p.Comment.CommentBody.ToString().ToList(),
-                                  //CommentUserName = p.Comment.User.UserName,                         
+                                  Answers = getAnswerList
                               }).FirstOrDefault();
                 return result;            
             }
         }
-
+        //======= Get tags related to a post =============
         public IList<Tag> GetPostTag(int id)
         {
             using (var db = new SovaContext())
@@ -170,48 +204,6 @@ namespace DatabaseService
             }
         }
 
-        public CommentExtended AddComment(Comment comment)
-        {
-            using (var db = new SovaContext())
-            {
-                comment.CommentId = db.comment.Max(c => c.CommentId) + 1;
-                db.Add(comment);
-                db.SaveChanges();
-            }
-            return GetComment(comment.CommentId);
-        }
-
-        public bool UpdateComment(Comment comment)
-        {
-            using (var db = new SovaContext())
-
-                try
-                {
-                    db.Attach(comment);
-                    db.Entry(comment).State = EntityState.Modified;
-                    return db.SaveChanges() > 0;
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    return false;
-                }
-
-        }
-
-        public bool DeleteComment(int id)
-        {
-            using (var db = new SovaContext())
-            {
-                var comment = db.comment.FirstOrDefault(c => c.CommentId == id);
-                if (comment == null)
-                {
-                    return false;
-                }
-                db.Remove(comment);
-                return db.SaveChanges() > 0;
-            }
-        }
-
         public int GetNumberOfComments()
         {
             using (var db = new SovaContext())
@@ -219,5 +211,93 @@ namespace DatabaseService
                 return db.comment.Count();
             }
         }
+        //======= Get users =============
+        public IList<User> GetUser(int page, int pagesize)
+        {
+            using (var db = new SovaContext())
+            {
+    
+                var tmp = (from u in db.user
+                           select new User
+                           {
+                               UserId = u.UserId,
+                               UserName = u.UserName,
+                               UserAge = u.UserAge,
+                               UserLocation = u.UserLocation,
+                               UserCreationDate = u.UserCreationDate
+                           })
+                           
+                          .OrderBy(o => o.UserId)
+                              .Skip(page * pagesize)
+                              .Take(pagesize)
+                              .ToList();
+                return tmp;
+            }
+        }
+
+        public User GetUser(int id)
+        {
+            using (var db = new SovaContext())
+            {
+                return (from u in db.user
+                        where u.UserId == id
+                        select new User
+                        {
+                            UserId = u.UserId,
+                            UserName = u.UserName,
+                            UserAge = u.UserAge,
+                            UserLocation = u.UserLocation,
+                            UserCreationDate = u.UserCreationDate
+                        }).FirstOrDefault();
+            }
+        }
+        public int GetNumberOfUsers()
+        {
+            using (var db = new SovaContext())
+            {
+                return db.user.Count();
+            }
+        }
+        //======= Get history =============
+        public IList<History> GetHistory(int page, int pagesize)
+        {
+            using (var db = new SovaContext())
+            {
+                var tmp = (from h in db.history
+                           select new History
+                           {
+                               sId = h.sId,
+                               SearchString = h.SearchString,
+                               SearchTime = h.SearchTime                         
+                           }).OrderBy(o => o.sId)
+                              .Skip(page * pagesize)
+                              .Take(pagesize)
+                              .ToList();
+                return tmp;
+            }
+        }
+
+        public History GetHistory(int id)
+        {
+            using (var db = new SovaContext())
+            {
+                return (from h in db.history
+                        where h.sId == id
+                        select new History
+                        {
+                            sId = h.sId,
+                            SearchString = h.SearchString,
+                            SearchTime = h.SearchTime
+                        }).FirstOrDefault();
+            }
+        }
+        public int GetNumberOfHistories()
+        {
+            using (var db = new SovaContext())
+            {
+                return db.history.Count();
+            }
+        }
+
     }
 }

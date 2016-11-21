@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StackOverFLow.DomainModel;
 using Microsoft.EntityFrameworkCore;
+using DomainModel;
 
 namespace DatabaseService
 {
@@ -20,6 +21,7 @@ namespace DatabaseService
         public DbSet<Marking> marking { get; set; }
         public DbSet<Tag> tag { get; set; }
         public DbSet<History> history { get; set; }
+        public DbSet<Annotation> annotation { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,13 +34,15 @@ namespace DatabaseService
             modelBuilder.Entity<Marking>().ToTable("marks");
             modelBuilder.Entity<History>().ToTable("search_history");
 
+            modelBuilder.Entity<Annotation>().ToTable("annotations");
+            modelBuilder.Entity<Annotation>().Property(t => t.AnnotationId).HasColumnName("aId");
+
             modelBuilder.Entity<Tag>().ToTable("tags");
             modelBuilder.Entity<Tag>().Property(t => t.TagName).HasColumnName("tag");
             modelBuilder.Entity<Tag>().HasKey(t => new { t.PostId, t.TagName });
 
             base.OnModelCreating(modelBuilder);
         }
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
