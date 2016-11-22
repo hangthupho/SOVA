@@ -22,6 +22,8 @@ namespace DatabaseService
         public DbSet<Tag> tag { get; set; }
         public DbSet<History> history { get; set; }
         public DbSet<Annotation> annotation { get; set; }
+        public DbSet<SearchedResult> searchedResult { get; set; }
+        public DbSet<WeightedSearch> weightedSearch { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -43,5 +43,10 @@ namespace DatabaseService
         Annotation AddAnnotation(Annotation annotation);
         bool UpdateAnnotation(Annotation annotation);
         bool DeleteAnnotation(int id);
+
+        //Search procedure
+        IList<SearchedResult> GetAllMatchPostsWithKeyword(string keyword);
+        IList<WeightedSearch> GetSearchedPost(string keyword1);
+
     }
 }

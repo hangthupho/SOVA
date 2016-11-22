@@ -1,4 +1,4 @@
-﻿   using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using StackOverFLow.DomainModel;
 using Microsoft.EntityFrameworkCore;
 using DomainModel;
+using MySql.Data.MySqlClient;
 
 namespace DatabaseService
 {
@@ -218,15 +219,7 @@ namespace DatabaseService
             {
     
                 var tmp = (from u in db.user
-                           select new User
-                           {
-                               UserId = u.UserId,
-                               UserName = u.UserName,
-                               UserAge = u.UserAge,
-                               UserLocation = u.UserLocation,
-                               UserCreationDate = u.UserCreationDate
-                           })
-                           
+                           select u)
                           .OrderBy(o => o.UserId)
                               .Skip(page * pagesize)
                               .Take(pagesize)
@@ -241,14 +234,7 @@ namespace DatabaseService
             {
                 return (from u in db.user
                         where u.UserId == id
-                        select new User
-                        {
-                            UserId = u.UserId,
-                            UserName = u.UserName,
-                            UserAge = u.UserAge,
-                            UserLocation = u.UserLocation,
-                            UserCreationDate = u.UserCreationDate
-                        }).FirstOrDefault();
+                        select u).FirstOrDefault();
             }
         }
         public int GetNumberOfUsers()
@@ -298,6 +284,45 @@ namespace DatabaseService
                 return db.history.Count();
             }
         }
+        //======= Search posts =============
+        public IList<WeightedSearch> GetSearchedPost(string keyword1)
+        {
+            using (var db = new SovaContext())
+            {
+                var result = db.weightedSearch.FromSql("call weighted_Search({0})", keyword1);
+                var result1 = new List<WeightedSearch>();
+                foreach (var data in result)
+                {
+                    result1.Add(data);
+                }
+                return result1;
+            }
+        }
 
+        public IList<SearchedResult> GetAllMatchPostsWithKeyword(string keyword)
+        {
+            using (var db = new SovaContext())
+            {
+                var conn = (MySqlConnection)db.Database.GetDbConnection();
+                conn.Open();
+                var cmd = new MySqlCommand("call post", conn);
+                var result = new List<SearchedResult>();
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+
+                        result.Add(new SearchedResult()
+                        {
+                            PostId = rdr.GetInt16(0),
+                            Score = rdr.GetInt16(2),
+                            PostBody = rdr.GetString(1),
+                            UserId = rdr.GetInt16(3)
+                        });
+                    }
+                }
+                return result.ToList();
+            }
+        }
     }
 }

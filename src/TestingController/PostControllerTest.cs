@@ -28,7 +28,7 @@ namespace TestingController
                 Score = 60,
                 PostBody = "First time using Unit Test with Moq to test the controller!",
                 Answers = new List<string> { "Well, hope this works...", "Ohlala it works" },
-                UserName = "Hang Thu Pho"       
+                UserName = "Group 7 RAWDATA"       
             });
             var mockUrlHelper = new Mock<IUrlHelper>();
             mockUrlHelper.Setup(x => x.Link(It.IsAny<string>(), It.IsAny<object>()))
@@ -56,7 +56,7 @@ namespace TestingController
             Assert.Equal("First time using Unit Test with Moq to test the controller!", asPostDetailModel.PostBody);
             Assert.Equal("Well, hope this works...", asPostDetailModel.Answers[0]);
             Assert.Equal("Ohlala it works", asPostDetailModel.Answers[1]);
-            Assert.Equal("Hang Thu Pho", asPostDetailModel.UserName);
+            Assert.Equal("Group 7 RAWDATA", asPostDetailModel.UserName);
         }
 
     }
