@@ -15,7 +15,6 @@ namespace StackOverFLow.DomainModel
         [ForeignKey("Post")]
         public int PostId { get; set; }
         public virtual Post Post { get; set; }
-
         public bool Status { get; set; }
     }
 }

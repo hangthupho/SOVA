@@ -19,7 +19,7 @@ namespace StackOverFLow.DomainModel
         public int UserId { get; set; }
         public virtual User User { get; set; }
 
-        public virtual Question Question { get; set; }
+        public Question Question { get; set; }
 
     }
 }
