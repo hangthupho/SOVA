@@ -2,9 +2,10 @@
   "version": "1.0.0-*",
 
   "dependencies": {
+    "AutoMapper": "5.1.1",
     "DomainModel": "1.0.0-*",
-    "NETStandard.Library": "1.6.0",
-    "Pomelo.EntityFrameworkCore.MySql": "1.0.1-prerelease-10019"
+    "NETStandard.Library": "1.6.1",
+    "Pomelo.EntityFrameworkCore.MySql": "1.0.1"
   },
 
   "frameworks": {
